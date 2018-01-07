@@ -1,19 +1,44 @@
 /**
  * http://www.codewars.com/kata/sum-of-pairs/train/javascript
  *
+ * Given a list of integers and a single sum value,
+ * return the first two values (parse from the left please)
+ * in order of appearance that add up to form the sum.
+ *
+ *
+ * sum_pairs([11, 3, 7, 5],         10)
+ * #              ^--^      3 + 7 = 10
+ * == [3, 7]
+ *
  * sum_pairs([4, 3, 2, 3, 4],         6)
  * #          ^-----^         4 + 2 = 6, indices: 0, 2 *
  * #             ^-----^      3 + 3 = 6, indices: 1, 3
  * #                ^-----^   2 + 4 = 6, indices: 2, 4
  * #  * entire pair is earlier, and therefore is the correct answer == [4, 2]
+ * == [4, 2]
+ *
+ * sum_pairs([0, 0, -2, 3], 2)
+ * #  there are no pairs of values that can be added to produce 2.
+ * == None/nil/undefined (Based on the language)
  *
  * sum_pairs([10, 5, 2, 3, 7, 5],         10)
  * #              ^-----------^   5 + 5 = 10, indices: 1, 5
  * #                    ^--^      3 + 7 = 10, indices: 3, 4 *
  * #  * entire pair is earlier, and therefore is the correct answer == [3, 7]
- * #  不是很懂为什么 [3, 7] 会排在前面，是因为 index 的差更小？
+ * == [3, 7]
+ * #  不是很懂为什么 [3, 7] 会'earlier'，不可能是因为 index 的差更小吧？
  *
- * 特么测试的数组会有 10,000,000 个值，还要小心超时。
+ *
+ * Negative numbers and duplicate numbers can and will appear.
+ *
+ * NOTE: There will also be lists tested of lengths upwards of 10,000,000 elements.
+ * Be sure your code doesn't time out.
+ */
+
+/*
+ * 分析：
+ * 暂时能想到的方法就是二重循环去遍历了，
+ * 最多是找到之后马上 break 掉，但还是想不通上面的那个例子啊..
  */
 
 let sum_pairs = function (ints, sum) {
@@ -34,16 +59,25 @@ let sum_pairs = function (ints, sum) {
             }
         }
     }
+
+    // 要找出所有符合结果中的 index 的差最小的话，上面就得执行完整遍历
+    // if (results.length) {
+    //     let differences = results.map(r => {
+    //         return r[1] - r[0];
+    //     });
+    //     // console.log(differences);
+    //     let index = differences.indexOf(Math.min.apply(Math, differences));
+    //     // console.log(index);
+    //     return [
+    //         ints[results[index][0]],
+    //         ints[results[index][1]]
+    //     ];
+    // }
+    
     if (results.length) {
-        let differences = results.map(r => {
-            return r[1] - r[0];
-        });
-        // console.log(differences);
-        let index = differences.indexOf(Math.min.apply(Math, differences));
-        // console.log(index);
         return [
-            ints[results[index][0]],
-            ints[results[index][1]]
+            ints[results[0][0]],
+            ints[results[0][1]]
         ];
     }
 };
