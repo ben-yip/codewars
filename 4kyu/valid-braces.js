@@ -106,7 +106,7 @@ console.log(validBraces("[({})](]")); // false
 /**
  * 这个和上面的思路一样，只是用来正则来表达
  */
-function validBraces(braces){
-    while(/\(\)|\[\]|\{\}/g.test(braces)){braces = braces.replace(/\(\)|\[\]|\{\}/g,"")}
-    return !braces.length;
-}
+// function validBraces(braces){
+//     while(/\(\)|\[\]|\{\}/g.test(braces)){braces = braces.replace(/\(\)|\[\]|\{\}/g,"")}
+//     return !braces.length;
+// }
