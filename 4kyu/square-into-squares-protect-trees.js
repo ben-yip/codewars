@@ -39,52 +39,94 @@
  * 分析：
  * 给定一个整数，求这个整数的平方所能拆解成的一系列平方和（严格递增）
  * - [n] 或者 [1,1,1,…,1] 都是无效的；
- * - 可能有多个解，返回最大的那个；
- * 那就从n-1的开始，遍历一次看有么有符合的咯。
+ * - 可能有多个解；
+ * - 那就从n-1的开始，遍历一次看有没有符合的。
+ *   该算法的查找顺序为：（假设 n=6）
+ *   -- 54321
+ *   -- 4321
+ *   -- 321
+ *   -- 21
+ *   -- 1
+ *   这种遍历做法的弊端是可能会遗漏符合要求的解。
  */
 function decompose(n) {
-    let square = n * n,
-        result = [],
-        valid = arr => { // check if it is a strictly increasing array
-            return arr.length ? arr.every((val, i, arr) => {
-                return arr[i - 1] ? val > arr[i - 1] : true;
-            }) : false;
-        };
-
-    let foo = []
-    n--;
-    while (!valid(result) && n > 0) {
-        result = [];
-        let sum = 0;
-        for (let i = n; i > 0; i--) {
-            sum = 0;
-            for (let j = i; j > 0; j--) {
-                if (sum + j * j <= square) {
-                    result.unshift(j);
-                    sum += j * j;
-                }
+    let square = n * n;
+    for (let i = n - 1; i > 0; i--) {
+        let sum = 0, result = [];
+        for (let j = i; j > 0; j--) {
+            if (sum + j * j <= square) {
+                result.unshift(j);
+                sum += j * j;
             }
-            if (sum !== square) result = []; // not valid, reset to empty
-            else foo.push(result)
-            // if (sum + i * i <= square) {
-            //     result.unshift(i);
-            //     sum += i * i;
-            // }
+            if (sum === square) return result;
         }
-        n--;
     }
-
-    console.log(foo);
-
-    return n > 0 ? result : null;
+    return null;
 }
 
+/*
+ * 题目中要求返回所有可能解中“最大"的那个，应该理解成数组的最后一项最大的那个解。
+ * （然而却发现按照上面的算法OJ也能通过，它只会检查 累加和 以及 数组序列是否递增）
+ * 所以就想办法弄了个阶乘式的遍历，例如 n=6，则遍历的序列的顺序为：
+ * ------
+ * 54321
+ * 5321
+ * 521
+ * 51
+ * ------
+ * 4321
+ * 421
+ * 41
+ * ------
+ * 321
+ * 31
+ * ------
+ * 21
+ * 直到找到为止。 
+ * 
+ * 然而超时了...........如果要提高效率的话，可以从数学的角度分析一下，跳过循环中一些不必要的计算
+ */
+function decomposeFacto(n) {
+    let square = n * n;
+    let facto = (n, origin) => {
+        if (n > 0) {
+            let sum = 0, result = [];
+            result.unshift(origin);
+            sum += origin * origin;
+            for (let i = n; i > 0; i--) {
+                if (sum + i * i <= square) {
+                    result.unshift(i);
+                    sum += i * i;
+                }
+            }
+            return sum === square ? result : facto(n - 1, origin);
+        } else return [];
+    };
+    for (let i = n - 1; i > 0; i--) {
+        let re = facto(i - 1, i);
+        if (re.length) return re;
+    }
+    return null;
+}
 
-// console.log(decompose(2));  // null
-// console.log(decompose(7));  // [2, 3, 6]
-// console.log(decompose(11)); // [1, 2, 4, 10]
-console.log(decompose(50)); // [1, 3, 5, 8, 49] // not [14, 48]
+console.log(decompose(2));  // null
+console.log(decompose(7));  // [2, 3, 6]
+console.log(decompose(11)); // [1, 2, 4, 10]
+console.log(decompose(50));      // [14, 48]
+console.log(decomposeFacto(50)); // [1, 3, 5, 8, 49]
+console.log(decompose(87802));  // Expected: [1,4,5,419,87801] Got: [1,5,937,87797] Sorted: true Total: true
+console.log(decompose(123456)); // [1, 2, 7, 29, 496, 123455]
+console.log(decompose(123457)); // [1, 3, 7, 31, 702, 123455]
 
 /**
- * 社区解答：
+ * 社区解答：https://www.codewars.com/kata/54eb33e5bc1a25440d000891/solutions/javascript
+ * 只能说6666
  */
+// function decompose(n, n2 = n * n, i = n, prev) {
+//     while (n2 > 0 && i-- > 1) {
+//         if (prev = decompose(n, n2 - i * i, i)) {
+//             return prev.concat(i)
+//         }
+//     }
+//     return (n2 === 0) ? [] : null
+// }
