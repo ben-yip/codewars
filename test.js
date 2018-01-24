@@ -23,22 +23,22 @@
  * ------
  * 1
  */
-let n = 5;
 
-let fa = n => {
+let fa = (n, origin) => {
     if (n > 0) {
-        // console.log(n);
+        console.log('----');
+        console.log(origin);
         for (let i = n; i > 0; i--) {
             console.log(i);
         }
-        fa(n - 1);
+        fa(n - 1, origin);
     }
 };
 
-fa(5);
+// fa(4, 5);
 
-// for (let i = n; i > 0; i--) {
-//     console.log('----------------');
-//     // console.log(i);
-//     foo(i);
-// }
+let n = 5;
+for (let i = n; i > 0; i--) {
+    console.log('=========');
+    fa(i - 1, i);
+}
