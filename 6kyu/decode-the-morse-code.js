@@ -4,7 +4,7 @@
  * Part of Series 1/3
  * This kata is part of a series on the Morse code.
  * After you complete this kata, you may try yourself at Decode the Morse code, advanced. (4-kyu)
- *
+ * (See ../4kyu/decode-the-morse-code-advanced.js)
  *
  * In this kata you have to write a simple Morse code decoder.
  * While the Morse code is now mostly superseded by voice and digital data communication channels,
@@ -112,8 +112,19 @@ function decodeMorse(morseCode) {
     return morseCode.trim().split('   ').map(wordCode => wordCode.split(' ').map(letterCode => MORSE_CODE[letterCode]).join('')).join(' ');
 }
 
-console.log(decodeMorse('.... . -.--   .--- ..- -.. .')); // 'HEY JUDE'
+// console.log(decodeMorse('.... . -.--   .--- ..- -.. .')); // 'HEY JUDE'
+
+module.exports = decodeMorse; // for advanced use for next Series
 
 /**
  * 社区解答：https://www.codewars.com/kata/54b724efac3d5402db00065e/solutions/javascript
  */
+// function decodeMorse(message) {
+//     return message
+//         .replace(/   /g, ' _ ')
+//         .split(' ')
+//         .map(function (letter) {
+//             return letter === '_' ? ' ' : MORSE_CODE[letter]
+//         })
+//         .join('')
+// }
